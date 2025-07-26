@@ -1,10 +1,17 @@
 const BadRequestError = require("../errors/BadRequestError");
 
-function validate(schema) {
+/**
+ * @param {{ body?: ZodSchema, params?: ZodSchema, query?: ZodSchema }} schemas
+ */
+function validate(schemas) {
     return (req, res, next) => {
         try {
-            req.body = req.body || {};
-            req.body = schema.parse(req.body);
+            for (const key of ['body', 'params', 'query']) {
+                if(schemas[key]) {
+                    req[key] = req[key] || {};
+                    req[key] = schemas[key].parse(req[key]);
+                }
+            }
             next();
         } catch (err) {
             if (err.errors && Array.isArray(err.errors)) {
