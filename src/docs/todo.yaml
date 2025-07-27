@@ -13,7 +13,7 @@ paths:
       tags:
         - Todos
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: List of todos
@@ -35,7 +35,7 @@ paths:
       tags:
         - Todos
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -68,7 +68,7 @@ paths:
       tags:
         - Todos
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: id
           in: path
@@ -100,7 +100,7 @@ paths:
       tags:
         - Todos
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: id
           in: path
@@ -145,7 +145,7 @@ paths:
       tags:
         - Todos
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - name: id
           in: path
