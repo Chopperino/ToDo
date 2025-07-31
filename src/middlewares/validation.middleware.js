@@ -6,10 +6,11 @@ const BadRequestError = require("../errors/BadRequestError");
 function validate(schemas) {
   return (req, res, next) => {
     try {
+      req.validated = {};
       for (const key of ['body', 'params', 'query']) {
         if (schemas[key]) {
           req[key] = req[key] || {};
-          req[key] = schemas[key].parse(req[key]);
+          req.validated[key] = schemas[key].parse(req[key]);
         }
       }
       next();

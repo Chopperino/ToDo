@@ -1,8 +1,20 @@
 const todoRepository = require("../repositories/todo.repository");
 const NotFoundError = require("../errors/NotFoundError");
 
-exports.getAll = (user_id) => {
-  return todoRepository.getAll(user_id);
+exports.getAll = async (user_id, page, limit) => {
+  const skip = (page - 1) * limit;
+  const { todos, total } = await todoRepository.getAll(user_id, skip, limit);
+
+  const totalPages = Math.ceil(total / limit)
+  return {
+    data: todos,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages,
+    }
+  }
 }
 
 exports.getById = async (user_id, todo_id) => {

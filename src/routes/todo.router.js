@@ -2,14 +2,18 @@ const express = require("express");
 const router = express.Router();
 const {getAllTodos, getTodoById, postTodo, updateTodo, deleteTodo} = require("../controllers/todo.controller");
 const validate = require("../middlewares/validation.middleware");
-const {createTodoSchema, updateTodoSchema} = require("../validators/todo.schema")
+const {createTodoSchema, updateTodoSchema} = require("../schemas/todo.schema")
 const authMiddleware = require("../middlewares/auth.middleware");
-const {createIdSchema} = require("../validators/params.schema");
+const {createIdSchema} = require("../schemas/params.schema");
+const {paginationQuerySchema} = require("../schemas/query.schema");
 
 const idParamName = "todo_id";
 
 router.get("/",
-  authMiddleware, 
+  authMiddleware,
+  validate({
+    query: paginationQuerySchema
+  }),
   getAllTodos);
 
 router.get("/:todo_id",

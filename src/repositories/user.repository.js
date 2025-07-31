@@ -10,7 +10,7 @@ exports.create = (user) => {
 exports.findById = (user_id) => {
   return prisma.user.findUnique({
     where: {
-      id: parseInt(user_id),
+      id: user_id,
     },
   })
 }
@@ -26,7 +26,7 @@ exports.findByEmail = (email) => {
 exports.update = (user_id, user) => {
   return prisma.user.update({
     where: {
-      id: parseInt(user_id),
+      id: user_id,
     },
     data: user,
   })
@@ -35,7 +35,7 @@ exports.update = (user_id, user) => {
 exports.delete = (user_id) => {
   return prisma.user.delete({
     where: {
-      id: parseInt(user_id),
+      id: user_id,
     },
   })
 }
