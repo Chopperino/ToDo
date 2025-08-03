@@ -1,11 +1,10 @@
 const todoService = require("../services/todo.service");
-const {paginationQuerySchema} = require("../schemas/query.schema");
 
 exports.getAllTodos = async (req, res) => {
   const {user_id} = req.user;
-  const {page, limit} = req.validated.query;
+  const query = req.validated.query;
 
-  const result = await todoService.getAll(user_id, page, limit);
+  const result = await todoService.getAll(user_id, query);
 
   res.status(200).json(result);
 }

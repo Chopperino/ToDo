@@ -1,11 +1,41 @@
 const todoRepository = require("../repositories/todo.repository");
 const NotFoundError = require("../errors/NotFoundError");
 
-exports.getAll = async (user_id, page, limit) => {
+exports.getAll = async (user_id, query) => {
+  const {
+    page,
+    limit,
+    title,
+    completed,
+    createdFrom,
+    createdTo,
+    orderBy
+  } = query
+
   const skip = (page - 1) * limit;
-  const { todos, total } = await todoRepository.getAll(user_id, skip, limit);
+
+  const filters = {
+    userId: user_id,
+    ...(title && { title: { contains: title, mode: "insensitive" } }),
+    ...(completed !== undefined && { completed }),
+    ...(createdFrom && createdTo && {
+      createdAt: {
+        gte: createdFrom,
+        lte: createdTo,
+      },
+    }),
+    ...(createdFrom && !createdTo && {
+      createdAt: { gte: createdFrom},
+    }),
+    ...(!createdFrom && createdTo && {
+      createdAt: { lte: createdTo },
+    }),
+  };
+
+  const { todos, total } = await todoRepository.getAll(filters, skip, limit, orderBy);
 
   const totalPages = Math.ceil(total / limit)
+
   return {
     data: todos,
     meta: {
@@ -14,7 +44,7 @@ exports.getAll = async (user_id, page, limit) => {
       limit,
       totalPages,
     }
-  }
+  };
 }
 
 exports.getById = async (user_id, todo_id) => {

@@ -5,14 +5,14 @@ const validate = require("../middlewares/validation.middleware");
 const {createTodoSchema, updateTodoSchema} = require("../schemas/todo.schema")
 const authMiddleware = require("../middlewares/auth.middleware");
 const {createIdSchema} = require("../schemas/params.schema");
-const {paginationQuerySchema} = require("../schemas/query.schema");
+const {todoQuerySchema} = require("../schemas/query.schema");
 
 const idParamName = "todo_id";
 
 router.get("/",
   authMiddleware,
   validate({
-    query: paginationQuerySchema
+    query: todoQuerySchema
   }),
   getAllTodos);
 

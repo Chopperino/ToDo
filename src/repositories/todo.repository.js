@@ -2,21 +2,21 @@ const {PrismaClient} = require("../../generated/prisma")
 
 const prisma = new PrismaClient();
 
-exports.getAll = async (user_id, skip, take) => {
+exports.getAll = async (where, skip, take, orderBy) => {
   const [todos, total] = await Promise.all([
     prisma.todo.findMany({
-      where: {
-        userId: user_id,
-      },
+      where,
       skip,
       take,
-    }),
-    prisma.todo.count({
-      where: {
-        userId: user_id,
+      orderBy: {
+        [orderBy.field]: orderBy.direction,
       },
     }),
-  ])
+    prisma.todo.count({
+      where,
+    }),
+  ]);
+
   return { todos, total };
 }
 
