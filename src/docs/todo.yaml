@@ -14,6 +14,63 @@ paths:
         - Todos
       security:
         - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+            example: 1
+          description: Page number of pagination
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+            example: 4
+          description: Number of how many todos are per page
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter todos by title (case-insensitive, partial match)
+        - name: completed
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter todos by completion status (true or false)
+        - name: createdFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: 2025.07.25
+          description: Filter todos created on or after this date
+        - name: createdTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: 2025.07.31
+          description: Filter todos created on or before this date
+        - name: orderBy
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^(id|title|completed|createdAt)-(asc|desc)$'
+            example: completed-desc
+          description: >
+              Sort order in the format `field-direction`.
+              field: one of `id`, `title`, `completed`, `createdAt`
+              direction: one of `asc`, `desc`
+
       responses:
         '200':
           description: List of todos
@@ -22,7 +79,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Todo'
+                  $ref: '#/components/schemas/AllTodosResponse'
         '401':
           description: Unauthorized
           content:
@@ -62,7 +119,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /todos/{id}:
+  /todos/{todo_id}:
     get:
       summary: Get todo by id
       tags:
@@ -70,11 +127,7 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/TodoIdParam'
       responses:
         '200':
           description: Todo
@@ -102,11 +155,7 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/TodoIdParam'
       requestBody:
         required: true
         content:
@@ -147,11 +196,7 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/TodoIdParam'
       responses:
         '200':
           description: Deleted todo
@@ -173,6 +218,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
 components:
+  parameters:
+    TodoIdParam:
+      name: todo_id
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 1
+      description: Id of todo
+
   schemas:
     ErrorResponse:
       type: object
@@ -181,6 +236,27 @@ components:
           type: boolean
         message:
           type: string
+
+    AllTodosResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Todo'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            page:
+              type: integer
+            limit:
+              type: integer
+              maximum: 100
+            totalPages:
+              type: integer
+
     Todo:
       type: object
       properties:

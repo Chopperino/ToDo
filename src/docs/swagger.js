@@ -8,7 +8,7 @@ const mergedDocs = merge({}, todoDoc, authDoc);
 
 mergedDocs.servers = [
   {
-    url: "http://localhost:3000/api",
+    url: "http://localhost:3000/api/v1/",
   },
 ];
 

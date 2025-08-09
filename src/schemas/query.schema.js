@@ -30,7 +30,10 @@ const paginationSchema = z.object({
 
 const filterSchema = z.object({
   title: z.string().optional(),
-  completed: booleanEnum.optional().transform(val => val !== "false"),
+  completed: booleanEnum.optional().transform(val => {
+    if(val === undefined) return undefined;
+    return val !== "false";
+  }),
   createdFrom: z.coerce.date().optional(),
   createdTo: z.coerce.date().optional(),
 });
