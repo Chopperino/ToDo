@@ -7,7 +7,9 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
@@ -22,6 +24,8 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "prisma": "^6.11.1"
+    "jest": "^30.0.5",
+    "prisma": "^6.11.1",
+    "supertest": "^7.1.4"
   }
 }
