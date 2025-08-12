@@ -1,5 +1,6 @@
 const todoService = require('../../services/todo.service');
 const todoRepository = require('../../repositories/todo.repository');
+const NotFoundError = require("../../errors/NotFoundError");
 
 jest.mock('../../repositories/todo.repository');
 
@@ -43,6 +44,7 @@ describe('Todo Service', () => {
       });
     });
   });
+
   describe('getById', () => {
     it('should return todo by its id', async () => {
       // Arrange
@@ -65,7 +67,35 @@ describe('Todo Service', () => {
       expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
       expect(result).toEqual(mockTodo);
     });
+    it('should throw NotFoundError if todo does not exist', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+
+      todoRepository.getById.mockResolvedValue(null);
+      // Act + Assert
+      await expect(todoService.getById(user_id, todo_id)).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+    });
+    it('should throw NotFoundError if todo belongs to another user', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+      const mockTodo = {
+        id: todo_id,
+        title: 'Test todo',
+        completed: false,
+        createdAt: '2025-07-12T14:06:33.248Z',
+        userId: 100
+      };
+
+      todoRepository.getById.mockResolvedValue(mockTodo);
+      // Act + Assert
+      await expect(todoService.getById(user_id, todo_id)).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+    });
   });
+
   describe('create', () => {
     it('should return created todo', async () => {
       // Arrange
@@ -91,6 +121,7 @@ describe('Todo Service', () => {
       expect(result).toEqual(mockTodo);
     });
   });
+
   describe('update', () => {
     it('should return updated todo', async () => {
       // Arrange
@@ -117,7 +148,39 @@ describe('Todo Service', () => {
       expect(todoRepository.update).toHaveBeenCalledWith(todo_id, { title: updatedTitle });
       expect(result).toEqual(updatedTodo);
     });
+    it('should throw NotFoundError if todo does not exist', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+      const title = 'Updated todo';
+
+      todoRepository.getById.mockResolvedValue(null);
+      // Act + Assert
+      await expect(todoService.update(user_id, todo_id, { title })).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+      expect(todoRepository.update).not.toHaveBeenCalled();
+    });
+    it('should throw NotFoundError if todo belongs to another user', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+      const updatedTitle = 'Updated todo';
+      const mockTodo = {
+        id: todo_id,
+        title: 'Test todo',
+        completed: false,
+        createdAt: '2025-07-12T14:06:33.248Z',
+        userId: 100
+      };
+
+      todoRepository.getById.mockResolvedValue(mockTodo);
+      // Act + Assert
+      await expect(todoService.update(user_id, todo_id, { title: updatedTitle })).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+      expect(todoRepository.delete).not.toHaveBeenCalled();
+    });
   });
+
   describe('delete', () => {
     it('should return deleted todo', async () => {
       // Arrange
@@ -138,6 +201,35 @@ describe('Todo Service', () => {
       expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
       expect(todoRepository.delete).toHaveBeenCalledWith(todo_id);
       expect(result).toEqual(mockTodo);
-    })
-  })
+    });
+    it('should throw NotFoundError if todo does not exist', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+
+      todoRepository.getById.mockResolvedValue(null)
+      // Act + Assert
+      await expect(todoService.delete(user_id, todo_id)).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+      expect(todoRepository.delete).not.toHaveBeenCalled();
+    });
+    it('should throw NotFoundError if todo belongs to another user', async () => {
+      // Arrange
+      const user_id = 1;
+      const todo_id = 2;
+      const mockTodo = {
+        id: todo_id,
+        title: 'Test todo',
+        completed: false,
+        createdAt: '2025-07-12T14:06:33.248Z',
+        userId: 100
+      };
+
+      todoRepository.getById.mockResolvedValue(mockTodo);
+      // Act + Assert
+      await expect(todoService.delete(user_id, todo_id)).rejects.toThrow(NotFoundError);
+      expect(todoRepository.getById).toHaveBeenCalledWith(todo_id);
+      expect(todoRepository.delete).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -7,9 +7,9 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test": "jest",
+    "test:unit": "jest --config=jest.unit.config.js --coverage",
+    "test:int": "jest --config=jest.integration.config.js --coverage"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
