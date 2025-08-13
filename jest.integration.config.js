@@ -12,8 +12,4 @@ module.exports = {
     '/node_modules/',
     '/generated/prisma/',
   ],
-  testMatch: [
-    '**/__tests__/**/*.int.js',
-    '**/?(*.)+(int).js'
-  ],
 };

@@ -15,9 +15,4 @@ app.use("/api/v1/todos", todoRouter);
 app.use("/api/v1/auth", authRouter);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`server is running on http://localhost:${PORT}/api/v1/`);
-  console.log(`swagger documentation is available on http://localhost:${PORT}/api/v1/docs/`)
-})
+module.exports = app;

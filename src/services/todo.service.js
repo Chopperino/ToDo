@@ -34,7 +34,7 @@ exports.getAll = async (user_id, query) => {
 
   const { todos, total } = await todoRepository.getAll(filters, skip, limit, orderBy);
 
-  const totalPages = Math.ceil(total / limit)
+  const totalPages = Math.ceil(total / limit);
 
   return {
     data: todos,

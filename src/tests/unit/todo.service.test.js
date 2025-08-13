@@ -6,7 +6,7 @@ jest.mock('../../repositories/todo.repository');
 
 describe('Todo Service', () => {
   describe('getAll', () => {
-    it('should return todos with meta data', async () => {
+    it('should return todos without filters with meta data', async () => {
       // Arrange
       const user_id = 1;
       const query = { page: 1, limit: 10 };
@@ -18,10 +18,7 @@ describe('Todo Service', () => {
         userId: user_id
       }];
 
-      todoRepository.getAll.mockResolvedValue({
-        todos: mockTodos,
-        total: 1
-      });
+      todoRepository.getAll.mockResolvedValue({ todos: mockTodos, total: 1 });
 
       // Act
       const result = await todoService.getAll(user_id, query);
@@ -39,6 +36,60 @@ describe('Todo Service', () => {
           total: 1,
           page: 1,
           limit: 10,
+          totalPages: 1
+        }
+      });
+    });
+    it('should return todos with filters with metadata', async () => {
+      // Arrange
+      const user_id = 1;
+      const query = {
+        page: 1,
+        limit: 10,
+        title: 'sp',
+        completed: true,
+        createdFrom: '2025-07-11T14:06:33.248Z',
+        createdTo: '2025-07-13T14:06:33.248Z',
+        orderBy: { field: 'completed', direction: 'desc' }
+      };
+      const mockTodos = [{
+        id: 1,
+        title: 'Special todo',
+        completed: true,
+        createdAt: '2025-07-12T14:06:33.248Z',
+        userId: user_id
+      }];
+
+      todoRepository.getAll.mockResolvedValue({ todos: mockTodos, total: 1 });
+
+      // Act
+      const result = await todoService.getAll(user_id, query);
+
+      // Assert
+      expect(todoRepository.getAll).toHaveBeenCalledWith(
+        // where
+        {
+          userId: user_id,
+          title: {
+            contains: query.title,
+            mode: 'insensitive'
+          },
+          completed: query.completed,
+          createdAt: {
+            gte: query.createdFrom,
+            lte: query.createdTo,
+          },
+        },
+        0, // skip
+        10, // take
+        query.orderBy
+      );
+      expect(result).toEqual({
+        data: mockTodos,
+        meta: {
+          total: 1,
+          page: query.page,
+          limit: query.limit,
           totalPages: 1
         }
       });
