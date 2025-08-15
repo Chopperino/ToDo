@@ -12,4 +12,8 @@ module.exports = {
     '/node_modules/',
     '/generated/prisma/',
   ],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/utils/setupTestDb.js'],
+  testMatch: [
+    '**/tests/integration/**/*.test.js'
+  ]
 };

@@ -14,7 +14,7 @@ exports.getTodoById = async (req, res) => {
   const {todo_id} = req.validated.params;
   const result = await todoService.getById(user_id, todo_id);
 
-  res.status(201).json(result);
+  res.status(200).json(result);
 }
 
 exports.postTodo = async (req, res) => {
@@ -22,7 +22,7 @@ exports.postTodo = async (req, res) => {
   const todo = req.validated.body;
   const result = await todoService.create(user_id, todo);
 
-  res.status(200).json(result);
+  res.status(201).json(result);
 }
 
 exports.updateTodo = async (req, res) => {

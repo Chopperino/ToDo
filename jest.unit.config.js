@@ -12,4 +12,7 @@ module.exports = {
     '/node_modules/',
     '/generated/prisma/'
   ],
+  testMatch: [
+    '**/tests/unit/**/*.test.js'
+  ]
 };
