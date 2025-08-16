@@ -32,12 +32,3 @@ exports.login = async (user) => {
   const token = jwt.sign({user_id: existingUser.id}, process.env.JWT_SECRET, {expiresIn: "1h"});
   return {token};
 }
-
-exports.delete = async (user_id) => {
-  const existingUser = await userRepository.findById(user_id);
-  if (!existingUser) {
-    throw new NotFoundError(`User with id=${user_id} not found`)
-  }
-
-  return userRepository.delete(user_id)
-}
