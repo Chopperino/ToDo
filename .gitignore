@@ -1,7 +1,6 @@
 node_modules
-.env
 /generated/prisma
 /prisma/migrations
 /**/.idea
 /coverage
-.env.test
+.env*
