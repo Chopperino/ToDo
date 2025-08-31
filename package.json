@@ -1,5 +1,5 @@
 {
-  "name": "todoapp4",
+  "name": "todoapp",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -7,7 +7,6 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
     "test:unit": "cross-env NODE_ENV=test jest --config=jest.unit.config.js --coverage",
     "test:int": "cross-env NODE_ENV=test jest --config=jest.integration.config.js --runInBand"
   },
